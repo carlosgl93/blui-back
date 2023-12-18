@@ -1,4 +1,4 @@
-# Project Title
+# Blui
 
 Blui, plataforma para encontrar al apoyo en casa que necesitas.
 
