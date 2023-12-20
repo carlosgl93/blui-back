@@ -1,5 +1,6 @@
 import express from "express";
 const cors = require("cors");
+import sql from "mssql";
 
 import { connectDb, getPool } from "./db/db";
 import getUsers from "./users/getUsers";
@@ -46,13 +47,13 @@ app.get("/prestadores", async (req, res) => {
   console.log(req.params);
   console.log(req.body);
 
-  const comunas = req.query.comunas || req.body.comunas;
-  const servicio = req.query.servicio || req.body.servicio;
+  const service_id = Number(req.query.servicio);
+  const comuna = Number(req.query.comuna);
 
-  console.log(comunas);
-  console.log(servicio);
+  console.log("comuna como  int", comuna);
+  console.log("servicio como int", service_id);
 
-  if (!comunas || !servicio) {
+  if (!comuna || !service_id) {
     try {
       console.log("inside without any filters");
       const data = await getPool().request().query`
@@ -72,15 +73,12 @@ app.get("/prestadores", async (req, res) => {
   try {
     // TODO: PASS THE PARAMETERS FROM THE FRONT TO THIS BACK QUERY: COMUNA ID AND SERVICE ID
     console.log("inside filtered query");
-    console.log(req.query);
-    console.log(req.params);
 
     const data = await getPool().request().query`
-      SELECT P.* 
+      SELECT id, firstname, lastname, email, phone, service_id, comuna_id, speciality_id 
       FROM Prestador P
-      INNER JOIN Prestador_Comuna PC ON P.id = PC.prestador_id
-      WHERE P.service_id = 1 AND PC.comuna_id IN (1, 2, 3);
-    `;
+      WHERE service_id = ${service_id} AND comuna_id = ${comuna}
+`;
     console.log(data);
     return res.status(200).send(data.recordset);
   } catch (error) {
