@@ -25,12 +25,7 @@ app.get("/comunas", async (req, res) => {
 
   try {
     const comunas = await getPool().request().query`SELECT * FROM Comuna`;
-    const responseBody = {
-      status: "success",
-      data: comunas.recordset,
-      message: "Fetched comunas successfully",
-      statusCode: 200
-    };
+    const responseBody = comunas.recordset;
 
     return res.status(200).send(responseBody);
   } catch (error) {
