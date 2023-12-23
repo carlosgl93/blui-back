@@ -1,30 +1,19 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { getPool } from "../db/db";
 
-export const getPrestadoresByComunaAndServicio = () => async (req: Request, res: Response) => {
-  console.log(req.query);
-  console.log(req.params);
-  console.log(req);
-
-  const comunas = req.query.comunas;
-  const servicio = req.query.servicio;
-
+export const getPrestadoresByComunaAndServicio = async (res: Response, comuna: number, servicio: number) => {
+  console.log("inside with comuna and servicio");
   try {
     const data = await getPool().request().query`
-      SELECT * FROM Prestadores
-      WHERE Comuna IN (${comunas})
-      AND Servicio = ${servicio}
-    `;
-    res.send({
-      status: "success",
-      data: data.recordset,
-      message: "Fetched prestadores successfully",
-      statusCode: 200
-    });
+      SELECT id, firstname, lastname, email, phone, service_id, comuna_id, speciality_id 
+      FROM Prestador P
+      WHERE service_id = ${servicio} AND comuna_id = ${comuna}`;
+    console.log(data);
+    return res.status(200).send(data.recordset);
   } catch (error) {
-    res.send({
+    return res.send({
       status: "error",
-      message: "There was an error fetching prestadores.",
+      message: "There was an error fetching prestadores with comuna and servicio.",
       statusCode: 500
     });
   }
