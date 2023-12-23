@@ -5,10 +5,11 @@ export const getPrestadoresByComunaAndServicio = async (res: Response, comuna: n
   console.log("inside with comuna and servicio");
   try {
     const data = await getPool().request().query`
-      SELECT id, firstname, lastname, email, phone, service_id, comuna_id, speciality_id 
+      SELECT P.id, P.firstname, P.lastname, P.email, P.phone, P.service_id, P.comuna_id, P.speciality_id, AVG(R.Score) as average_review 
       FROM Prestador P
-      WHERE service_id = ${servicio} AND comuna_id = ${comuna}`;
-    console.log(data);
+      LEFT JOIN Reviews R ON P.Id = R.prestador_id
+      WHERE P.service_id = ${servicio} AND P.comuna_id = ${comuna}
+      GROUP BY P.id, P.firstname, P.lastname, P.email, P.phone, P.service_id, P.comuna_id, P.speciality_id;`;
     return res.status(200).send(data.recordset);
   } catch (error) {
     return res.send({
