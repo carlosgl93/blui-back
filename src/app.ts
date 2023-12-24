@@ -1,33 +1,34 @@
 import express from "express";
-// app.ts
-// import { getUsers, getUserById, createUser } from "./src/users/index.js";
+import dotenv from "dotenv";
+const cors = require("cors");
 
-import { connectDb, getPool } from "./db/db";
+import { connectDb } from "./db/db";
 import getUsers from "./users/getUsers";
 import createUser from "./users/createUser";
 import getUserById from "./users/getUserById";
+import { getAllComunas } from "./comunas/getAllComunas";
+import { getAllServiciosAndEspecialidades } from "./servicios/getAllServiciosAndEspecialdades";
+import { getPrestadores } from "./prestadores/getPrestadores";
 
 const app = express();
+dotenv.config();
+app.use(cors());
 app.use(express.json());
 
 connectDb();
 
 app.get("/users", getUsers);
-
+app.post("/users", createUser);
 app.get("/users/:id", getUserById);
 
-app.post("/users", createUser);
+app.get("/comunas", getAllComunas);
 
-app.get("/comunas", (req, res) => {
-  getPool().request().query`SELECT * FROM Comunas`
-    .then(result => {
-      res.json(result.recordset);
-    })
-    .catch(err => {
-      res.status(500).send(err.message);
-    });
-});
+app.get("/prestadores", getPrestadores);
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.get("/servicios", getAllServiciosAndEspecialidades);
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
