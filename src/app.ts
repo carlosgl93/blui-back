@@ -1,4 +1,5 @@
 import express from "express";
+import dotenv from "dotenv";
 const cors = require("cors");
 
 import { connectDb } from "./db/db";
@@ -10,24 +11,24 @@ import { getAllServiciosAndEspecialidades } from "./servicios/getAllServiciosAnd
 import { getPrestadores } from "./prestadores/getPrestadores";
 
 const app = express();
+dotenv.config();
 app.use(cors());
 app.use(express.json());
 
 connectDb();
 
 app.get("/users", getUsers);
-
-app.get("/users/:id", getUserById);
-
 app.post("/users", createUser);
+app.get("/users/:id", getUserById);
 
 app.get("/comunas", getAllComunas);
 
 app.get("/prestadores", getPrestadores);
 
-app.get("/servicios", getAllServiciosAndEspecialidades);   
-  
+app.get("/servicios", getAllServiciosAndEspecialidades);
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
