@@ -62,3 +62,62 @@ To connect to the database using DBeaver:
 ## Testing
 
 Run tests using the command: `npm test`
+
+## Deploying to Azure VM with Nginx
+
+This section assumes you have an Azure VM running Windows and you're connected to it using Remote Desktop.
+
+1. Download and install Nginx for Windows from the [official Nginx website](http://nginx.org/en/download.html).
+
+2. Navigate to the directory where Nginx was installed (usually `C:\nginx`).
+
+3. Open the `conf` directory and find the `nginx.conf` file.
+
+4. Open `nginx.conf` in a text editor and replace its contents with the following configuration, replacing `your-app-port` with the port your application runs on (5050 in this case):
+
+```nginx
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+
+    # Enable gzip compression
+    gzip on;
+    gzip_types text/plain application/xml text/css application/javascript;
+
+    server {
+        listen       80 http2;
+        server_name  localhost;
+
+        root   html;
+        index  index.html index.htm;
+
+        location / {
+            proxy_pass http://localhost:5050;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+
+        # Set caching headers
+        location ~* \.(?:manifest|js|css|png|jpg|jpeg|svg)$ {
+            expires 1w;
+            add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+}
+
+ 5. Save and close the nginx.conf file.
+
+ 6. Open a command prompt as administrator and navigate to the Nginx directory (cd C:\nginx).
+
+ 7. Start Nginx with the command start nginx.
