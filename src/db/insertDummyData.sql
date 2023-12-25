@@ -1,36 +1,19 @@
-SET IDENTITY_INSERT Usuario ON;
+-- Inserting data into Usuario
+INSERT INTO Usuario (firstname, lastname, password, email, phone, address, city, region, country, comuna_id)
+VALUES ('John', 'Doe', 'password123', 'john.doe@example.com', '1234567890', '123 Main St', 'Santiago', 'Metropolitana', 'Chile', 229),
+       ('Jane', 'Doe', 'password123', 'jane.doe@example.com', '0987654321', '456 Main St', 'Santiago', 'Metropolitana', 'Chile', 229);
 
--- Insert into Usuario
-INSERT INTO Usuario (id, firstname, password, email, phone, address, city, region, country) VALUES
-(1, 'Juan', 'hashedpassword1', 'juan@example.com', '1234567890', '123 Calle Principal', 'Santiago', 'RM', 'Chile'),
-(2, 'Ana', 'hashedpassword2', 'ana@example.com', '0987654321', '456 Avenida Arce', 'Valparaíso', 'Valparaíso', 'Chile');
+-- Inserting data into Prestador
+INSERT INTO Prestador (firstname, lastname, password, email, phone, address, city, region, country, comuna_id, service_id, speciality_id)
+VALUES ('Carlos', 'Smith', 'password123', 'carlos.smith@example.com', '1234567890', '789 Main St', 'Santiago', 'Metropolitana', 'Chile', 229, 1, 1),
+       ('Maria', 'Gonzalez', 'password123', 'maria.gonzalez@example.com', '0987654321', '012 Main St', 'Santiago', 'Metropolitana', 'Chile', 229, 2, 2);
+       
+-- Inserting more data into Usuario
+INSERT INTO Usuario (firstname, lastname, password, email, phone, address, city, region, country, comuna_id)
+VALUES ('Alice', 'Johnson', 'password456', 'alice.johnson@example.com', '2345678901', '789 Secondary St', 'Santiago', 'Metropolitana', 'Chile', 135),
+       ('Bob', 'Williams', 'password456', 'bob.williams@example.com', '1098765432', '012 Secondary St', 'Santiago', 'Metropolitana', 'Chile', 135);
 
-SET IDENTITY_INSERT Usuario OFF;
-
-SET IDENTITY_INSERT Comuna ON;
-
--- Insert into Comuna
-INSERT INTO Comuna (id, name, region, country) VALUES
-(1, 'Las Condes', 'RM', 'Chile'),
-(2, 'Viña del Mar', 'Valparaíso', 'Chile');
-
-SET IDENTITY_INSERT Comuna OFF;
-
--- Insert into Usuario_Comuna
-INSERT INTO Usuario_Comuna (usuario_id, comuna_id) VALUES
-(1, 1),
-(2, 2);
-
-SET IDENTITY_INSERT Prestador ON;
-
--- Insert into Prestador
-INSERT INTO Prestador (id, firstname, password, email, phone, address, city, region, country, service_id, speciality_id) VALUES
-(1, 'Carlos', 'hashedpassword3', 'carlos@example.com', '1122334455', '789 Calle Roble', 'Santiago', 'RM', 'Chile', 1, 1),
-(2, 'Maria', 'hashedpassword4', 'maria@example.com', '5566778899', '321 Calle Pino', 'Valparaíso', 'Valparaíso', 'Chile', 2, 2);
-
-SET IDENTITY_INSERT Prestador OFF;
-
--- Insert into Prestador_Comuna
-INSERT INTO Prestador_Comuna (prestador_id, comuna_id) VALUES
-(1, 1),
-(2, 2);
+-- Inserting more data into Prestador
+INSERT INTO Prestador (firstname, lastname, password, email, phone, address, city, region, country, comuna_id, service_id, speciality_id)
+VALUES ('Patricia', 'Brown', 'password456', 'patricia.brown@example.com', '2345678901', '345 Secondary St', 'Santiago', 'Metropolitana', 'Chile', 135, 3, 3),
+       ('Robert', 'Garcia', 'password456', 'robert.garcia@example.com', '1098765432', '678 Secondary St', 'Santiago', 'Metropolitana', 'Chile', 135, 4, 10);
