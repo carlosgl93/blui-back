@@ -1,63 +1,81 @@
-
+CREATE TABLE Comuna (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL,
+    region NVARCHAR(150),
+    country NVARCHAR(100) 
+);
 
 CREATE TABLE Usuario (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    firstname NVARCHAR(50),
-    password NVARCHAR(255),
-    email NVARCHAR(255),
-    phone NVARCHAR(50),
+    firstname NVARCHAR(50) NOT NULL,
+    lastname NVARCHAR(50) NOT NULL,
+    password NVARCHAR(255) NOT NULL,
+    email NVARCHAR(255) NOT NULL,
+    phone NVARCHAR(20),
     address NVARCHAR(255),
-    city NVARCHAR(50),
-    region NVARCHAR(50),
-    country NVARCHAR(50)
-);
-
-CREATE TABLE Comuna (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    name NVARCHAR(50),
-    region NVARCHAR(50),
-    country NVARCHAR(50)
-);
-
-CREATE TABLE Usuario_Comuna (
-    usuario_id INT FOREIGN KEY REFERENCES Usuario(id),
-    comuna_id INT FOREIGN KEY REFERENCES Comuna(id),
-    PRIMARY KEY (usuario_id, comuna_id)
-);
-
-CREATE TABLE Prestador (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    firstname NVARCHAR(50),
-    password NVARCHAR(255),
-    email NVARCHAR(255),
-    phone NVARCHAR(50),
-    address NVARCHAR(255),
-    city NVARCHAR(50),
-    region NVARCHAR(50),
-    country NVARCHAR(50),
-    service_id INT NOT NULL,
-    speciality_id INT NOT NULL
-);
-
-CREATE TABLE Prestador_Comuna (
-    prestador_id INT FOREIGN KEY REFERENCES Prestador(id),
-    comuna_id INT FOREIGN KEY REFERENCES Comuna(id),
-    PRIMARY KEY (prestador_id, comuna_id)
+    city NVARCHAR(100),
+    region NVARCHAR(150),
+    country NVARCHAR(100),
+    comuna_id INT,
+    FOREIGN KEY (comuna_id) REFERENCES Comuna(id)
 );
 
 CREATE TABLE Servicio (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    name NVARCHAR(50),
-    description NVARCHAR(255)
+    name NVARCHAR(255) NOT NULL,
+    description NVARCHAR(1000)
 );
 
 CREATE TABLE Especialidad (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    name NVARCHAR(50),
-    description NVARCHAR(255),
-    servicio INT Foreign Key REFERENCES Servicio(id) 
+    service_id INT NOT NULL,
+    name NVARCHAR(255) NOT NULL,
+    description NVARCHAR(1000),
+    FOREIGN KEY (service_id) REFERENCES Servicio(id)
 );
 
-ALTER TABLE Prestador
-ADD FOREIGN KEY (service_id) REFERENCES Servicio(id),
-    FOREIGN KEY (speciality_id) REFERENCES Especialidad(id);
+CREATE TABLE Prestador (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    firstname NVARCHAR(50) NOT NULL,
+    lastname NVARCHAR(50) NOT NULL,
+    password NVARCHAR(255) NOT NULL,
+    email NVARCHAR(255) NOT NULL,
+    phone NVARCHAR(20),
+    address NVARCHAR(255),
+    city NVARCHAR(100),
+    region NVARCHAR(100),
+    country NVARCHAR(100),
+    comuna_id INT,
+	service_id INT,
+	speciality_id INT,
+    FOREIGN KEY (comuna_id) REFERENCES Comuna(id),
+    FOREIGN KEY (service_id) REFERENCES Servicio(id),
+    FOREIGN KEY (speciality_id) REFERENCES Especialidad(id),
+);
+
+CREATE TABLE Usuario_Comuna (
+    usuario_id INT NOT NULL,
+    comuna_id INT NOT NULL,
+    PRIMARY KEY (usuario_id, comuna_id),
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(id),
+    FOREIGN KEY (comuna_id) REFERENCES Comuna(id)
+);
+
+CREATE TABLE Prestador_Comuna (
+    prestador_id INT NOT NULL,
+    comuna_id INT NOT NULL,
+    PRIMARY KEY (prestador_id, comuna_id),
+    FOREIGN KEY (prestador_id) REFERENCES Prestador(id),
+    FOREIGN KEY (comuna_id) REFERENCES Comuna(id)
+);
+
+CREATE TABLE Reviews (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    prestador_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    comment NVARCHAR(1000),
+    score INT,
+    created_at DATETIME2,
+    FOREIGN KEY (prestador_id) REFERENCES Prestador(id),
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(id)
+);
