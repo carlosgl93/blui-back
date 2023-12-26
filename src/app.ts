@@ -9,6 +9,7 @@ import getUserById from "./users/getUserById";
 import { getAllComunas } from "./comunas/getAllComunas";
 import { getAllServiciosAndEspecialidades } from "./servicios/getAllServiciosAndEspecialdades";
 import { getPrestadores } from "./prestadores/getPrestadores";
+import { getPrestadorById } from "./prestadores/getPrestadorById";
 
 const app = express();
 dotenv.config();
@@ -24,6 +25,7 @@ app.get("/users/:id", getUserById);
 app.get("/comunas", getAllComunas);
 
 app.get("/prestadores", getPrestadores);
+app.get("/prestadores/:id", getPrestadorById);
 
 app.get("/servicios", getAllServiciosAndEspecialidades);
 
