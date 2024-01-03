@@ -21,6 +21,7 @@ For local environment:
 3. `LOCAL_DB_PASSWORD` - The password for your local database (carlos2015817!)
 4. `LOCAL_DB_HOST` - The host of your local database (localhost)
 5. `LOCAL_DB_NAME` - The name of your local database (Blui-Local)
+6. `SECRET` - Secret value to sign the JWT tokens
 
 For production environment:
 
@@ -29,6 +30,7 @@ For production environment:
 3. `PROD_DB_PASSWORD` - The password for your production database (XXXXXXXXX)
 4. `PROD_DB_HOST` - The host of your production database (20.XXX.XXX.XXX)
 5. `PROD_DB_NAME` - The name of your production database (Blui)
+6. `SECRET` - Secret value to sign the JWT tokens
 
 ## Docker SQL Image Setup
 

@@ -4,7 +4,7 @@ const cors = require("cors");
 
 import { connectDb } from "./db/db";
 import getUsers from "./users/getUsers";
-import createUser from "./users/createUser";
+import { createUser, loginUser } from "./users";
 import getUserById from "./users/getUserById";
 import { getAllComunas } from "./comunas/getAllComunas";
 import { getAllServiciosAndEspecialidades } from "./servicios/getAllServiciosAndEspecialdades";
@@ -20,6 +20,8 @@ connectDb();
 
 app.get("/users", getUsers);
 app.post("/users", createUser);
+app.post("/users/login", loginUser);
+
 app.get("/users/:id", getUserById);
 
 app.get("/comunas", getAllComunas);

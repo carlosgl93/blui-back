@@ -9,7 +9,7 @@ export const getPrestadoresByServicioAndEspecialidad = async (
   try {
     console.log("inside only service and especialidad");
     const data = await getPool().request().query`
-        SELECT TOP 20 P.id, P.firstname, P.lastname, P.email, P.phone, P.service_id, P.comuna_id, P.speciality_id, AVG(R.Score) as average_review 
+        SELECT TOP 20 P.id, P.firstname, P.lastname, P.email, P.phone, P.service_id, P.comuna_id, P.speciality_id, AVG(R.Score) as average_review, COUNT(R.id) as total_reviews 
         FROM Prestador P
         LEFT JOIN Reviews R ON P.Id = R.prestador_id
         WHERE P.service_id = ${servicio} AND P.speciality_id = ${especialidad}
