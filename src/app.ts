@@ -10,6 +10,7 @@ import { getAllComunas } from "./comunas/getAllComunas";
 import { getAllServiciosAndEspecialidades } from "./servicios/getAllServiciosAndEspecialdades";
 import { getPrestadores } from "./prestadores/getPrestadores";
 import { getPrestadorById } from "./prestadores/getPrestadorById";
+import { verifyUser } from "./users/verifyUser";
 
 const app = express();
 dotenv.config();
@@ -20,6 +21,7 @@ connectDb();
 
 app.get("/users", getUsers);
 app.post("/users", createUser);
+app.post("/users/verify-email", verifyUser);
 app.post("/users/login", loginUser);
 
 app.get("/users/:id", getUserById);
