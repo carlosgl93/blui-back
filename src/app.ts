@@ -11,6 +11,8 @@ import { getAllServiciosAndEspecialidades } from "./servicios/getAllServiciosAnd
 import { getPrestadores } from "./prestadores/getPrestadores";
 import { getPrestadorById } from "./prestadores/getPrestadorById";
 import { verifyUser } from "./users/verifyUser";
+import { createPrestador } from "./prestadores/createPrestador";
+import { verifyPrestador } from "./prestadores/verifyPrestador";
 
 const app = express();
 dotenv.config();
@@ -30,6 +32,8 @@ app.get("/comunas", getAllComunas);
 
 app.get("/prestadores", getPrestadores);
 app.get("/prestadores/:id", getPrestadorById);
+app.post("/prestadores/verify-email", verifyPrestador);
+app.post("/prestadores", createPrestador);
 
 app.get("/servicios", getAllServiciosAndEspecialidades);
 

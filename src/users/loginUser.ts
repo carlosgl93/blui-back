@@ -17,14 +17,19 @@ export const loginUser = async (req: Request, res: Response) => {
 
   try {
     // Find the user in the database
-    const result = await pool
-      .request()
-      .input("email", sql.NVarChar, email)
-      .query("SELECT * FROM Usuario WHERE email = @email");
 
-    if (result.recordset.length > 0) {
-      const user = result.recordset[0];
+    const poolRequestWithEmail = pool.request().input("email", sql.NVarChar, email);
 
+    const isUserQuery = await poolRequestWithEmail.query("SELECT * FROM Usuario WHERE email = @email");
+    const user = isUserQuery.recordset[0];
+    // Find if the user is also a prestador by the email.
+    const isPrestadorQuery = await poolRequestWithEmail.query("SELECT * FROM Prestador WHERE email = @email");
+    const prestador = isPrestadorQuery.recordset[0];
+
+    console.log("user", user);
+    console.log("prestador", prestador);
+
+    if (user) {
       // Check if the password is correct
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
@@ -36,7 +41,7 @@ export const loginUser = async (req: Request, res: Response) => {
       const token = jwt.sign({ id: user.id }, secretKey as string);
 
       // Send the user data and token in the response
-      return res.json({ user, token });
+      return res.json({ user, prestador, token });
     } else {
       return res.status(401).json({ message: "Invalid email or password" });
     }
