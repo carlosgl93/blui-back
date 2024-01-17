@@ -11,10 +11,18 @@ export const getAllComunas = async (req: Request, res: Response) => {
 
     return res.status(200).send(responseBody);
   } catch (error) {
-    return res.status(500).send({
-      status: "error",
-      message: "There was an error fetching comunas.",
-      statusCode: 500
-    });
+    if (error instanceof Error) {
+      return res.status(500).send({
+        status: "error",
+        message: "There was an error fetching comunas. " + error.message,
+        statusCode: 500
+      });
+    } else {
+      return res.status(500).send({
+        status: "error",
+        message: "There was an error fetching comunas.",
+        statusCode: 500
+      });
+    }
   }
 };

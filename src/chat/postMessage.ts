@@ -61,7 +61,7 @@ export const postMessage = async (req: Request, res: Response) => {
 
     const { firstname: prestadorName, email } = prestadorQuery.recordset[0];
 
-    const { firstname: userFirstname } = userQuery.recordset[0];
+    const { firstname: userFirstname, lastname: userLastname } = userQuery.recordset[0];
 
     let transporter = nodemailer.createTransport({
       service: "gmail",
@@ -78,6 +78,7 @@ export const postMessage = async (req: Request, res: Response) => {
       text: `Hola ${prestadorName}, ${userFirstname} te ha enviado un mensaje: ${message}`,
       html:
         `<p>Hola ${prestadorName}:</p>` +
+        `${userFirstname} ${userLastname} te ha enviado un mensaje:` +
         `<br>` +
         `<p>${message}</p>` +
         `<a href="${process.env.BASE_URL}/chat?userId=${userId}&prestadorId=${prestadorId}">¡Respondele aquí!</a>`
