@@ -79,3 +79,13 @@ CREATE TABLE Reviews (
     FOREIGN KEY (prestador_id) REFERENCES Prestador(id),
     FOREIGN KEY (usuario_id) REFERENCES Usuario(id)
 );
+
+CREATE TABLE Mensajes (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    prestador_id INT NOT NULL,
+    message NVARCHAR(1000) NOT NULL,
+    created_at DATETIME2 DEFAULT GETDATE(),
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(id),
+    FOREIGN KEY (prestador_id) REFERENCES Prestador(id)
+);

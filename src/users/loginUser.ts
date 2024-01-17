@@ -36,9 +36,14 @@ export const loginUser = async (req: Request, res: Response) => {
       if (!isPasswordCorrect) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
+let token;
 
-      // Generate a token
-      const token = jwt.sign({ id: user.id }, secretKey as string);
+// Generate a token
+if (user && prestador) {
+  token = jwt.sign({ id: prestador.id }, secretKey as string);
+} else {
+  token = jwt.sign({ id: user.id }, secretKey as string);
+}
 
       // Send the user data and token in the response
       return res.json({ user, prestador, token });

@@ -13,6 +13,8 @@ import { getPrestadorById } from "./prestadores/getPrestadorById";
 import { verifyUser } from "./users/verifyUser";
 import { createPrestador } from "./prestadores/createPrestador";
 import { verifyPrestador } from "./prestadores/verifyPrestador";
+import { postMessage } from "./chat/postMessage";
+import { getMessages } from "./chat/getMessages";
 
 const app = express();
 dotenv.config();
@@ -36,6 +38,9 @@ app.post("/prestadores/verify-email", verifyPrestador);
 app.post("/prestadores", createPrestador);
 
 app.get("/servicios", getAllServiciosAndEspecialidades);
+
+app.get("/chat", getMessages);
+app.post("/chat", postMessage);
 
 const port = process.env.PORT || 3000;
 
