@@ -56,7 +56,7 @@ export const postMessage = async (req: Request, res: Response) => {
         `);
 
     const userQuery = await getPool().request().query(`
-            SELECT firstname, email FROM Usuario WHERE id = ${userId}
+            SELECT firstname, email, lastname FROM Usuario WHERE id = ${userId}
         `);
 
     const { firstname: prestadorName, email } = prestadorQuery.recordset[0];
