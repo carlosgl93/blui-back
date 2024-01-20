@@ -15,6 +15,8 @@ import { createPrestador } from "./prestadores/createPrestador";
 import { verifyPrestador } from "./prestadores/verifyPrestador";
 import { postMessage } from "./chat/postMessage";
 import { getMessages } from "./chat/getMessages";
+import { getDisponibilidadByPrestadorId } from "./disponibilidad/getDisponibilidadByPrestadorId";
+import { postDisponibilidad } from "./disponibilidad/postDisponibilidad";
 
 const app = express();
 dotenv.config();
@@ -41,6 +43,9 @@ app.get("/servicios", getAllServiciosAndEspecialidades);
 
 app.get("/chat", getMessages);
 app.post("/chat", postMessage);
+
+app.get("/disponibilidad/:id", getDisponibilidadByPrestadorId);
+app.post("/disponibilidad", postDisponibilidad);
 
 const port = process.env.PORT || 3000;
 
