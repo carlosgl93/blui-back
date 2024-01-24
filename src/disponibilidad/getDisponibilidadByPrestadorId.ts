@@ -9,27 +9,27 @@ export const getDisponibilidadByPrestadorId = async (req: Request, res: Response
   const query = `SELECT 
     days.id,
     days.prestador_id,
-    days.monday,
-    days.tuesday,
-    days.wednesday,
-    days.thursday,
-    days.friday,
-    days.saturday,
-    days.sunday,
-    times.start_time,
-    times.end_time
-FROM 
+    days.day_name,
+    days.is_available,
+    MIN(times.start_time) AS start_time,
+    MAX(times.end_time) AS end_time
+  FROM 
     AvailabilityDays AS days
-LEFT JOIN 
+  LEFT JOIN 
     AvailabilityTimes AS times ON days.id = times.availability_day_id
-WHERE 
-    days.prestador_id = @prestadorId;`;
+  WHERE 
+    days.prestador_id = @prestadorId
+  GROUP BY
+    days.id,
+    days.prestador_id,
+    days.day_name,
+    days.is_available;
+    `;
 
   try {
     const result = await request.query(query);
 
     const disponibilidad = result.recordset;
-    console.log(disponibilidad);
     return res.status(200).send(disponibilidad);
   } catch (error) {
     if (error instanceof Error) {
