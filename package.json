@@ -4,10 +4,10 @@
   "description": "Express server for BLUI with SQL database",
   "main": "app.ts",
   "scripts": {
-    "start": "node ./dist/app.js",
-    "dev": "tsx watch src/app.ts",
+    "start": "node ./dist/index.js",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "prod": "npm run build && node dist/app.js",
+    "prod": "npm run build && node dist/index.js",
     "test": "jest"
   },
   "keywords": [],

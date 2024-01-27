@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import sql from "mssql";
 import { getPool } from "../db";
+import { error } from "../utils/logger";
 
 export const getPrestadorInboxMessages = async (req: Request, res: Response) => {
   const request = getPool().request();
@@ -19,10 +20,10 @@ export const getPrestadorInboxMessages = async (req: Request, res: Response) => 
         WHERE rn = 1;
     `);
     res.status(200).send(prestadorChats.recordset);
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      res.status(500).send(new Error(error.message));
+  } catch (err) {
+    error(err);
+    if (err instanceof Error) {
+      res.status(500).send(new Error(err.message));
     }
   }
 };

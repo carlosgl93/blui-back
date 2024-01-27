@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { getPool } from "../db/db";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
+import { getPool } from "../db/db";
+import { error, info } from "../utils/logger";
+
 export const createUser = async (req: Request, res: Response) => {
   const { firstname, lastname, email, password, forWhom, rut, nombrePaciente, comuna_id } = req.body;
-  console.log(req.body);
+  info(req.body);
 
   let nombrePacienteToStore;
 
@@ -25,7 +27,7 @@ export const createUser = async (req: Request, res: Response) => {
 
   const checkAlreadyExistEmail = await getPool().request().query(`SELECT * FROM Usuario WHERE email = '${email}'`);
   if (checkAlreadyExistEmail.recordset[0]?.email === email) {
-    console.log("email ya existe", checkAlreadyExistEmail.recordset[0]);
+    info("email ya existe", checkAlreadyExistEmail.recordset[0]);
     return res.status(400).send({
       status: "error",
       message: "Este email ya esta asociado a una cuenta."
@@ -34,7 +36,7 @@ export const createUser = async (req: Request, res: Response) => {
 
   const checkAlreadyExistRut = await getPool().request().query(`SELECT * FROM Usuario WHERE rut = '${rut}'`);
   if (checkAlreadyExistRut.recordset[0]?.rut === rut) {
-    console.log("rut ya existe", checkAlreadyExistRut.recordset[0]);
+    info("rut ya existe", checkAlreadyExistRut.recordset[0]);
 
     return res.status(400).send({
       status: "error",
@@ -73,23 +75,23 @@ export const createUser = async (req: Request, res: Response) => {
         "<p>Si tu no te registraste en Blui, por favor ignora este email.</p>"
     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
+    transporter.sendMail(mailOptions, function (err, i) {
+      if (err) {
+        error(err);
       } else {
-        console.log("Email sent: " + info.response);
+        info("Email sent: " + i.response);
       }
     });
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error);
+  } catch (err) {
+    if (err instanceof Error) {
+      error(err);
       return res.status(500).json({
         status: "error",
-        message: error.message,
+        message: err.message,
         statusCode: 500
       });
     } else {
-      console.error(error);
+      error(err);
       return res.status(500).json({
         status: "error",
         message: "Unkwon error occurred.",
@@ -109,16 +111,16 @@ export const createUser = async (req: Request, res: Response) => {
       message: "User created successfully",
       statusCode: 201
     });
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error);
+  } catch (err) {
+    if (err instanceof Error) {
+      error(err);
       return res.status(500).json({
         status: "error",
-        message: error.message,
+        message: err.message,
         statusCode: 500
       });
     } else {
-      console.error(error);
+      error(err);
       return res.status(500).json({
         status: "error",
         message: "Unkwon error occurred.",
@@ -127,4 +129,3 @@ export const createUser = async (req: Request, res: Response) => {
     }
   }
 };
-
