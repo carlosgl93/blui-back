@@ -17,6 +17,9 @@ import { postMessage } from "./chat/postMessage";
 import { getMessages } from "./chat/getMessages";
 import { getDisponibilidadByPrestadorId } from "./disponibilidad/getDisponibilidadByPrestadorId";
 import { postDisponibilidad } from "./disponibilidad/postDisponibilidad";
+import { getPrestadorComunas } from "./comunas/getPrestadorComunas";
+import { getPrestadorInboxMessages } from "./chat/getPrestadorInboxMessages";
+import { getUsuarioInboxMessages } from "./chat/getUsuarioInboxMessages";
 
 const app = express();
 dotenv.config();
@@ -24,6 +27,11 @@ app.use(cors());
 app.use(express.json());
 
 connectDb();
+
+app.use((req, res, next) => {
+  console.log(`Path: ${req.path}`);
+  next();
+});
 
 app.get("/users", getUsers);
 app.post("/users", createUser);
@@ -38,11 +46,15 @@ app.get("/prestadores", getPrestadores);
 app.get("/prestadores/:id", getPrestadorById);
 app.post("/prestadores/verify-email", verifyPrestador);
 app.post("/prestadores", createPrestador);
+app.get("/prestador/comunas", getPrestadorComunas);
 
 app.get("/servicios", getAllServiciosAndEspecialidades);
 
 app.get("/chat", getMessages);
 app.post("/chat", postMessage);
+
+app.get("/inbox/prestador", getPrestadorInboxMessages);
+app.get("/inbox/usuario", getUsuarioInboxMessages);
 
 app.get("/disponibilidad/:id", getDisponibilidadByPrestadorId);
 app.post("/disponibilidad", postDisponibilidad);

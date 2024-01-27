@@ -11,12 +11,12 @@ export const getPrestadoresByComunaAndServicio = async (res: Response, comuna: n
 
   try {
     const data = await request.query`
-      SELECT P.id ,P.firstname, P.lastname, P.email, P.phone, P.service_id, P.comuna_id, P.speciality_id, AVG(R.Score) as average_review, COUNT(R.id) as total_reviews 
+      SELECT P.id ,P.firstname, P.lastname, P.email, P.description, P.phone, P.service_id, P.comuna_id, P.speciality_id, AVG(R.Score) as average_review, COUNT(R.id) as total_reviews 
       FROM Prestador P
       INNER JOIN Prestador_Comuna PC ON P.id = PC.prestador_id
       LEFT JOIN Reviews R ON P.id = R.prestador_id
       WHERE PC.comuna_id = @comuna_id AND P.service_id = @service_id
-      GROUP BY P.id, P.firstname, P.lastname, P.email, P.phone, P.service_id, P.comuna_id, P.speciality_id;
+      GROUP BY P.id, P.firstname, P.lastname, P.email, P.description, P.phone, P.service_id, P.comuna_id, P.speciality_id;
     `;
     return res.status(200).send(data.recordset);
   } catch (error) {

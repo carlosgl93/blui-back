@@ -13,7 +13,10 @@ export const getMessages = async (req: Request, res: Response) => {
 
   try {
     const messagesQuery = await request.query(
-      `SELECT * FROM Mensajes WHERE usuario_id = @userId AND prestador_id = @prestadorId`
+      `SELECT Mensajes.*, Usuario.firstname, Usuario.lastname 
+      FROM Mensajes 
+      INNER JOIN Usuario ON Mensajes.usuario_id = Usuario.id 
+      WHERE Mensajes.usuario_id = @userId AND Mensajes.prestador_id = @prestadorId`
     );
     const messages = messagesQuery.recordset;
 
