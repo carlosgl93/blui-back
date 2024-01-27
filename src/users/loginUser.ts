@@ -17,33 +17,44 @@ export const loginUser = async (req: Request, res: Response) => {
 
   try {
     // Find the user in the database
-
     const poolRequestWithEmail = pool.request().input("email", sql.NVarChar, email);
 
     const isUserQuery = await poolRequestWithEmail.query("SELECT * FROM Usuario WHERE email = @email");
     const user = isUserQuery.recordset[0];
     // Find if the user is also a prestador by the email.
-    const isPrestadorQuery = await poolRequestWithEmail.query("SELECT * FROM Prestador WHERE email = @email");
+    const isPrestadorQuery = await poolRequestWithEmail.query(`
+      SELECT P.id, P.firstname, P.lastname, P.password, P.email, P.phone, P.address, P.city, P.region, P.country, P.comuna_id, P.service_id, P.speciality_id, STRING_AGG(PC.comuna_id, ', ') as comunas
+      FROM Prestador P
+      LEFT JOIN Prestador_Comuna PC ON P.id = PC.prestador_id
+      WHERE P.email = @email
+      GROUP BY P.id, P.firstname, P.lastname, P.password, P.email, P.phone, P.address, P.city, P.region, P.country, P.comuna_id, P.service_id, P.speciality_id;	
+    `);
     const prestador = isPrestadorQuery.recordset[0];
 
-    console.log("user", user);
-    console.log("prestador", prestador);
-
-    if (user) {
+    if (user || prestador) {
+      let isPasswordCorrect;
       // Check if the password is correct
-      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+      if (user) {
+        isPasswordCorrect = await bcrypt.compare(password, user.password);
+      } else {
+        console.log(password, prestador.password);
+        isPasswordCorrect = await bcrypt.compare(password, prestador.password);
+        console.log(typeof prestador.password, typeof password);
+      }
 
       if (!isPasswordCorrect) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
-let token;
+      let token;
 
-// Generate a token
-if (user && prestador) {
-  token = jwt.sign({ id: prestador.id }, secretKey as string);
-} else {
-  token = jwt.sign({ id: user.id }, secretKey as string);
-}
+      // Generate a token
+      if (user && prestador) {
+        token = jwt.sign({ id: prestador.id }, secretKey as string);
+      } else if (user && !prestador) {
+        token = jwt.sign({ id: user.id }, secretKey as string);
+      } else {
+        token = jwt.sign({ id: prestador.id }, secretKey as string);
+      }
 
       // Send the user data and token in the response
       return res.json({ user, prestador, token });
