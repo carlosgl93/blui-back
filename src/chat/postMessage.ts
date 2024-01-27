@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-
-import { getPool } from "../db/db";
 import sql from "mssql";
 import nodemailer from "nodemailer";
+
+import { getPool } from "../db/db";
+import { SECRET, EMAIL_USERNAME, EMAIL_PASSWORD, BASE_URL } from "../utils/config";
 
 export const postMessage = async (req: Request, res: Response) => {
   console.log("posting a new message");
@@ -12,7 +13,7 @@ export const postMessage = async (req: Request, res: Response) => {
   const { userId, prestadorId, message, sentBy } = req.body;
   console.log("sentBy", sentBy);
 
-  const secretKey = process.env.SECRET;
+  const secretKey = SECRET;
 
   if (!req.headers.authorization) {
     return res.status(401).send({
@@ -66,13 +67,13 @@ export const postMessage = async (req: Request, res: Response) => {
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD
+        user: EMAIL_USERNAME,
+        pass: EMAIL_PASSWORD
       }
     });
 
     let mailOptions = {
-      from: process.env.EMAIL_USERNAME,
+      from: EMAIL_USERNAME,
       to: email,
       subject: `Blui: ${userFirstname} te ha enviado un mensaje`,
       text: `Hola ${prestadorName}, ${userFirstname} te ha enviado un mensaje: ${message}`,
@@ -81,7 +82,7 @@ export const postMessage = async (req: Request, res: Response) => {
         `${userFirstname} ${userLastname} te ha enviado un mensaje:` +
         `<br>` +
         `<p>${message}</p>` +
-        `<a href="${process.env.BASE_URL}/chat?userId=${userId}&prestadorId=${prestadorId}">¡Respondele aquí!</a>`
+        `<a href="${BASE_URL}/chat?userId=${userId}&prestadorId=${prestadorId}">¡Respondele aquí!</a>`
     };
 
     transporter.sendMail(mailOptions, function (error, info) {

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getPool } from "../db";
+import { error } from "../utils/logger";
 
 export const getDisponibilidadByPrestadorId = async (req: Request, res: Response) => {
   const prestadorId = req.params.id;
@@ -31,12 +32,12 @@ export const getDisponibilidadByPrestadorId = async (req: Request, res: Response
 
     const disponibilidad = result.recordset;
     return res.status(200).send(disponibilidad);
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-      return res.status(500).send(error.message);
+  } catch (err) {
+    if (err instanceof Error) {
+      error(err.message);
+      return res.status(500).send(err.message);
     } else {
-      res.status(500).send(error);
+      res.status(500).send(err);
     }
   }
 };

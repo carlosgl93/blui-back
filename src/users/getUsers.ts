@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getPool } from "../db/db";
+import { error } from "../utils/logger";
 
 const getUsers = async (req: Request, res: Response) => {
   try {
@@ -12,14 +13,14 @@ const getUsers = async (req: Request, res: Response) => {
     });
   } catch (err) {
     if (err instanceof Error) {
-      console.error(err);
+      error(err);
       res.status(500).json({
         status: "error",
         message: err.message,
         statusCode: 500
       });
     } else {
-      console.error(err);
+      error(err);
       res.status(500).json({
         status: "error",
         message: "An unknown error occurred.",

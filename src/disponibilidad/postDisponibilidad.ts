@@ -1,37 +1,38 @@
 import { Request, Response } from "express";
 import sql from "mssql";
 import { getPool } from "../db";
+import { error } from "../utils/logger";
 
 export const postDisponibilidad = async (req: Request, res: Response) => {
- const { newDisponibilidad } = req.body;
+  const { newDisponibilidad } = req.body;
 
- if (!Array.isArray(newDisponibilidad) || newDisponibilidad.length === 0) {
-   res.status(400).send("No days provided");
-   return;
- }
+  if (!Array.isArray(newDisponibilidad) || newDisponibilidad.length === 0) {
+    res.status(400).send("No days provided");
+    return;
+  }
 
- let errors = [];
- let response = [];
+  let errors = [];
+  let response = [];
 
- for (const disponibilidad of newDisponibilidad) {
-   const request = getPool().request();
+  for (const disponibilidad of newDisponibilidad) {
+    const request = getPool().request();
 
-   const { prestadorId, dayName, isAvailable, startTime, endTime } = disponibilidad;
+    const { prestadorId, dayName, isAvailable, startTime, endTime } = disponibilidad;
 
-   // Validate dayName
-   if (!["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"].includes(dayName)) {
-     errors.push(`Invalid dayName: ${dayName}`);
-     continue;
-   }
+    // Validate dayName
+    if (!["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"].includes(dayName)) {
+      errors.push(`Invalid dayName: ${dayName}`);
+      continue;
+    }
 
-   // Add the inputs to the request object
-   request.input("prestadorId", sql.Int, prestadorId);
-   request.input("day", sql.VarChar, dayName);
-   request.input("startTime", sql.NVarChar, startTime);
-   request.input("endTime", sql.NVarChar, endTime);
-   request.input("isAvailable", sql.Bit, isAvailable);
+    // Add the inputs to the request object
+    request.input("prestadorId", sql.Int, prestadorId);
+    request.input("day", sql.VarChar, dayName);
+    request.input("startTime", sql.NVarChar, startTime);
+    request.input("endTime", sql.NVarChar, endTime);
+    request.input("isAvailable", sql.Bit, isAvailable);
 
-   const queryDays = `
+    const queryDays = `
   DECLARE @id INT;
 
   IF NOT EXISTS (SELECT * FROM AvailabilityDays WHERE prestador_id = @prestadorId AND day_name = @day)
@@ -62,57 +63,54 @@ export const postDisponibilidad = async (req: Request, res: Response) => {
   END
 `;
 
-   try {
-     await request.query(queryDays);
-   } catch (error) {
-     console.error("Error inserting or updating AvailabilityDays and AvailabilityTimes:", error);
-     errors.push(`Error inserting or updating AvailabilityDays and AvailabilityTimes: ${error}`);
-     continue;
-   }
+    try {
+      await request.query(queryDays);
+    } catch (err) {
+      error("Error inserting or updating AvailabilityDays and AvailabilityTimes:", err);
+      errors.push(`Error inserting or updating AvailabilityDays and AvailabilityTimes: ${err}`);
+      continue;
+    }
 
-   // Get the ID of the AvailabilityDays row
-   let daysId;
-   try {
-     const {
-       recordset: [{ id }]
-     } = await request.query("SELECT id FROM AvailabilityDays WHERE prestador_id = @prestadorId AND day_name = @day");
-     daysId = id;
-   } catch (error) {
-     console.error("Error getting ID of AvailabilityDays row:", error);
-     //  res.status(500).send("Error getting ID of AvailabilityDays row");
-     errors.push(`Error getting ID of AvailabilityDays row: ${error}`);
-     continue;
-   }
+    // Get the ID of the AvailabilityDays row
+    let daysId;
+    try {
+      const {
+        recordset: [{ id }]
+      } = await request.query("SELECT id FROM AvailabilityDays WHERE prestador_id = @prestadorId AND day_name = @day");
+      daysId = id;
+    } catch (err) {
+      error("Error getting ID of AvailabilityDays row:", err);
+      errors.push(`Error getting ID of AvailabilityDays row: ${err}`);
+      continue;
+    }
 
-   // Insert into AvailabilityTimes
-   const queryTimes = `
+    // Insert into AvailabilityTimes
+    const queryTimes = `
    INSERT INTO AvailabilityTimes (availability_day_id, start_time, end_time)
    VALUES (@daysId, @startTime, @endTime)
    `;
-   request.input("daysId", sql.Int, daysId);
+    request.input("daysId", sql.Int, daysId);
 
-   try {
-     await request.query(queryTimes);
-   } catch (error) {
-     console.error("Error inserting into AvailabilityTimes:", error);
-     //  res.status(500).send("Error inserting into AvailabilityTimes");
-     errors.push(`Error inserting into AvailabilityTimes: ${error}`);
-     continue;
-   }
+    try {
+      await request.query(queryTimes);
+    } catch (err) {
+      error("Error inserting into AvailabilityTimes:", err);
+      errors.push(`Error inserting into AvailabilityTimes: ${err}`);
+      continue;
+    }
 
-   if (errors.length > 0) {
-     res.status(500).send(errors);
-     return;
-   }
+    if (errors.length > 0) {
+      res.status(500).send(errors);
+      return;
+    }
 
-   // Add the day and its start and end times to the response
-   response.push({
-     dayName,
-     startTime,
-     endTime,
-     isAvailable
-   });
- }
- res.send(response);
-  
+    // Add the day and its start and end times to the response
+    response.push({
+      dayName,
+      startTime,
+      endTime,
+      isAvailable
+    });
+  }
+  res.send(response);
 };

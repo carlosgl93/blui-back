@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
-import { getPool } from "../db/db";
 import sql from "mssql";
 
-const getUserById = async (req: Request, res: Response) => {
+import { getPool } from "../db/db";
+import { error } from "../utils/logger";
+
+export const getUserById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const request = getPool().request();
@@ -18,10 +20,10 @@ const getUserById = async (req: Request, res: Response) => {
     });
   } catch (err) {
     if (err instanceof Error) {
-      console.error(err);
+      error(err);
       res.status(500).send(err.message);
     } else {
-      console.error(err);
+      error(err);
       res.status(500).send("An unknown error occurred.");
     }
   }

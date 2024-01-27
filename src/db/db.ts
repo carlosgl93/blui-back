@@ -1,26 +1,35 @@
 import sql from "mssql";
-import dotenv from "dotenv";
+import {
+  LOCAL_DB_USER,
+  LOCAL_DB_PASSWORD,
+  LOCAL_DB_HOST,
+  LOCAL_DB_NAME,
+  PROD_DB_USER,
+  PROD_DB_PASSWORD,
+  PROD_DB_HOST,
+  PROD_DB_NAME,
+  ENVIRONMENT
+} from "../utils/config";
+import { error } from "../utils/logger";
 
-dotenv.config();
-
-const isProd = process.env.ENVIRONMENT === "production";
+const isProd = ENVIRONMENT === "production";
 
 const config = isProd
   ? {
-      user: process.env.PROD_DB_USER!,
-      password: process.env.PROD_DB_PASSWORD!,
-      server: process.env.PROD_DB_HOST!,
-      database: process.env.PROD_DB_NAME!,
+      user: PROD_DB_USER!,
+      password: PROD_DB_PASSWORD!,
+      server: PROD_DB_HOST!,
+      database: PROD_DB_NAME!,
       options: {
         encrypt: true,
         enableArithAbort: true
       }
     }
   : {
-      user: process.env.LOCAL_DB_USER!,
-      password: process.env.LOCAL_DB_PASSWORD!,
-      server: process.env.LOCAL_DB_HOST!,
-      database: process.env.LOCAL_DB_NAME!,
+      user: LOCAL_DB_USER!,
+      password: LOCAL_DB_PASSWORD!,
+      server: LOCAL_DB_HOST!,
+      database: LOCAL_DB_NAME!,
       options: {
         encrypt: false,
         enableArithAbort: true
@@ -34,7 +43,7 @@ export const connectDb = async () => {
     pool = await sql.connect(config);
     console.log("Connected to SQL Server");
   } catch (err) {
-    console.error("Connection failed", err);
+    error("Connection failed", err);
   }
 };
 

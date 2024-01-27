@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import sql from "mssql";
 import { getPool } from "../db";
+import { error, info } from "../utils/logger";
 
 export const getMessages = async (req: Request, res: Response) => {
   const { userId, prestadorId } = req.query;
@@ -9,7 +10,7 @@ export const getMessages = async (req: Request, res: Response) => {
   request.input("userId", sql.Int, userId);
   request.input("prestadorId", sql.Int, prestadorId);
 
-  console.log(userId, prestadorId);
+  info(userId, prestadorId);
 
   try {
     const messagesQuery = await request.query(
@@ -21,10 +22,10 @@ export const getMessages = async (req: Request, res: Response) => {
     const messages = messagesQuery.recordset;
 
     return res.status(200).send(messages);
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      return res.status(500).send({ message: error.message });
+  } catch (err) {
+    if (err instanceof Error) {
+      error(err);
+      return res.status(500).send({ message: err.message });
     }
     return res.status(500).send({ message: "Error al obtener los mensajes." });
   }
