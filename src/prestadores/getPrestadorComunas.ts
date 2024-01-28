@@ -9,8 +9,13 @@ export const getPrestadorComunas = async (req: Request, res: Response) => {
     const request = getPool().request();
     request.input("prestadorId", sql.Int, prestadorId);
 
-    const comunas = await request.query(`SELECT comuna_id FROM Prestador_Comuna pc WHERE prestador_id = @prestadorId;`);
-    const responseBody = comunas.recordset.map((comuna: { comuna_id: string }) => Number(comuna.comuna_id));
+    const comunas = await request.query(`
+      SELECT c.* 
+      FROM Prestador_Comuna pc 
+      JOIN Comuna c ON pc.comuna_id = c.id 
+      WHERE pc.prestador_id = @prestadorId;
+    `);
+    const responseBody = comunas.recordset;
 
     return res.status(200).send(responseBody);
   } catch (error) {

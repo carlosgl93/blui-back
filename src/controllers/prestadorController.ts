@@ -5,8 +5,9 @@ import {
   getPrestadorById,
   verifyPrestador,
   createPrestador,
-  getPrestadorComunas as getComunas
+  getPrestadorComunas
 } from "../prestadores";
+import { postPrestadorComunas } from "../prestadores/postPrestadorComunas";
 
 export const getAllPrestadores = (req: Request, res: Response) => {
   getPrestadores(req, res);
@@ -24,6 +25,10 @@ export const postPrestador = (req: Request, res: Response) => {
   createPrestador(req, res);
 };
 
-export const getPrestadorComunas = (req: Request, res: Response) => {
-  getComunas(req, res);
+export const getComunas = (req: Request, res: Response) => {
+  getPrestadorComunas(req, res);
+};
+
+export const postComunas = (req: Request, res: Response) => {
+  postPrestadorComunas(req, res);
 };
