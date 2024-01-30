@@ -7,9 +7,6 @@ import { getPool } from "../db";
 export const loginUser = async (req: Request, res: Response) => {
   const secretKey = process.env.SECRET;
   const { email, password } = req.body;
-  console.log(req.body);
-  console.log(email);
-  console.log(password);
 
   const pool = getPool();
 
@@ -23,11 +20,11 @@ export const loginUser = async (req: Request, res: Response) => {
     const user = isUserQuery.recordset[0];
     // Find if the user is also a prestador by the email.
     const isPrestadorQuery = await poolRequestWithEmail.query(`
-      SELECT P.id, P.firstname, P.lastname, P.password, P.email, P.phone, P.address, P.city, P.region, P.country, P.comuna_id, P.service_id, P.speciality_id, STRING_AGG(PC.comuna_id, ', ') as comunas
+      SELECT P.id, P.firstname, P.lastname, P.password, P.description, P.email, P.phone, P.address, P.city, P.region, P.country, P.comuna_id, P.service_id, P.speciality_id, STRING_AGG(PC.comuna_id, ', ') as comunas
       FROM Prestador P
       LEFT JOIN Prestador_Comuna PC ON P.id = PC.prestador_id
       WHERE P.email = @email
-      GROUP BY P.id, P.firstname, P.lastname, P.password, P.email, P.phone, P.address, P.city, P.region, P.country, P.comuna_id, P.service_id, P.speciality_id;	
+      GROUP BY P.id, P.firstname, P.lastname, P.password, P.description, P.email, P.phone, P.address, P.city, P.region, P.country, P.comuna_id, P.service_id, P.speciality_id;	
     `);
     const prestador = isPrestadorQuery.recordset[0];
 

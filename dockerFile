@@ -1,0 +1,8 @@
+# Use the official Microsoft SQL Server image from Docker Hub
+FROM mcr.microsoft.com/mssql/server:2017-latest
+
+# Set the environment variables
+ENV ACCEPT_EULA=Y
+ENV SA_PASSWORD=Carlos2015817!
+ENV MYSQL_DATABASE=Blui-Local
+ENV MYSQL_USER=sa

@@ -5,7 +5,8 @@ import {
   getPrestador,
   postVerifyPrestador,
   postPrestador,
-  getPrestadorComunas
+  getComunas,
+  postComunas
 } from "../controllers/prestadorController";
 
 const prestadoresRouter = express.Router();
@@ -14,6 +15,7 @@ prestadoresRouter.get("/", getAllPrestadores);
 prestadoresRouter.get("/:id", getPrestador);
 prestadoresRouter.post("/verify-email", postVerifyPrestador);
 prestadoresRouter.post("/", postPrestador);
-prestadoresRouter.get("/comunas", getPrestadorComunas);
+prestadoresRouter.get("/comunas/:id", getComunas);
+prestadoresRouter.post("/comunas", postComunas);
 
 export default prestadoresRouter;

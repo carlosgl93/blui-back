@@ -14,6 +14,8 @@ import chatRouter from "./routes/chatRoutes";
 import inboxRouter from "./routes/inboxRoutes";
 import disponibilidadRouter from "./routes/disponibilidadRoutes";
 import logPathMiddleware from "./middlewares/logPath";
+import tarifasRouter from "./routes/tarifasRoutes";
+import { unknownEndpoint } from "./middlewares/unknownEndpoint";
 
 export const app = express();
 
@@ -32,6 +34,9 @@ app.use("/servicios", serviciosRouter);
 app.use("/chat", chatRouter);
 app.use("/inbox", inboxRouter);
 app.use("/disponibilidad", disponibilidadRouter);
+app.use("/tarifas", tarifasRouter);
+
+app.use(unknownEndpoint);
 
 
 
