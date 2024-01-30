@@ -1,0 +1,8 @@
+"id","firstname","password","email","phone","address","city","region","country","service_id","speciality_id","lastname","comuna_id","imgUrl","description","verified","rut"
+1,Carlos,$2b$10$bAF63RmxmqJcvRcxkcXzauvi9FuuLR2fC8bmYrfK9IK9TDx6QUnUK,cgumucio93@gmail.com,"1122334455","789 Calle Roble",Santiago,RM,Chile,3,3,Gumucio,229,,"Soy un profesional dedicado y competente, con 10 anos de experiencia.",0,"18445810-0"
+2,Maria,hashedpassword4,maria@example.com,"5566778899","321 Calle Pino",Valparaíso,Valparaíso,Chile,1,1,Neymar,2,,,0,"18445810-2"
+9,paola,,constanza.sepz@gmail.com,"92423212",,,,,2,2,sepulveda,,,,0,"18105509-4"
+10,Sofia,,sofia@sofia.cl,"1234123412",,,,,2,2,fia,,,,0,"19422343-2"
+11,jesus,,jesus@nazaret.cl,"01",,,,,2,2,nazaret,,,,0,"0000000-1"
+13,ignacio,,labbe@ignacio.cl,"412341234",,,,,3,7,labbe,,,,0,"012341234-2"
+14,Javiera,,javiera@hormazabal.cl,"123412341",,,,,4,10,Hormazabal,,,,0,"19445910-1"
