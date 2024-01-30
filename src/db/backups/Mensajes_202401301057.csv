@@ -1,0 +1,18 @@
+"id","usuario_id","prestador_id","message","created_at","sent_by"
+73,11,1,"Hola, me gustaría saber si estás disponible esta semana.",2024-01-18 14:12:26.773,user
+74,11,1,"Hola, me gustaría saber si estás disponible esta semana.",2024-01-18 14:15:53.964,user
+75,11,1,"Hola, me gustaría saber si estás disponible esta semana.",2024-01-18 14:17:52.787,user
+76,11,1,nuevo,2024-01-18 14:18:58.786,user
+77,11,1,otro,2024-01-18 14:19:14.503,user
+78,11,1,another,2024-01-18 15:31:21.043,user
+79,1,1,"Hola, me gustaría saber si estás disponible esta semana.",2024-01-23 08:46:46.098,prestador
+81,11,1,este mensaje fue enviado el jeuves a las 12:52pm australianas,2024-01-25 04:52:17.044,user
+82,11,1,"Hola nicolas, gracias por contactarme",2024-01-25 04:59:53.174,prestador
+83,11,1,Perdona por demorarme tanto en responder.,2024-01-25 04:59:59.385,prestador
+84,11,1,"Esta bien, veoi que estas disponible casi todos los dias.",2024-01-25 05:00:47.882,user
+85,11,1,podriamos juntarnos uno de estos dias?,2024-01-25 05:01:14.689,user
+86,11,1,"Si por su puesto, cuando te acomoda?",2024-01-25 05:01:45.188,prestador
+87,11,1,"Yo puedo lunes, martes y viernes de esta semana",2024-01-25 07:13:56.977,prestador
+88,11,1,test 123,2024-01-26 03:38:15.500,prestador
+89,11,2,"Hola, me gustaría saber si estás disponible esta semana.",2024-01-26 03:38:58.279,user
+90,11,1,test user 1234,2024-01-26 03:39:20.654,user

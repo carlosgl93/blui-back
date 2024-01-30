@@ -53,6 +53,8 @@ CREATE TABLE Prestador (
     FOREIGN KEY (speciality_id) REFERENCES Especialidad(id),
 );
 
+
+
 CREATE TABLE Usuario_Comuna (
     usuario_id INT NOT NULL,
     comuna_id INT NOT NULL,
@@ -89,3 +91,28 @@ CREATE TABLE Mensajes (
     FOREIGN KEY (usuario_id) REFERENCES Usuario(id),
     FOREIGN KEY (prestador_id) REFERENCES Prestador(id)
 );
+
+CREATE TABLE AvailabilityDays (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    prestador_id INT NOT NULL,
+    day_name VARCHAR(10) NOT NULL,
+    is_available BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (prestador_id) REFERENCES Prestador(id)
+);
+
+CREATE TABLE AvailabilityTimes (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    availability_day_id INT NOT NULL,
+    start_time TIME,
+    end_time TIME,
+    FOREIGN KEY (availability_day_id) REFERENCES AvailabilityDays(id)
+);
+
+CREATE TABLE Tarifas (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    prestador_id INT NOT NULL,
+    day_name NVARCHAR(15) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (prestador_id) REFERENCES Prestador(id)
+);
+
