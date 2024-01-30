@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    build: .
+    hostname: 03aed76df020
+    mac_address: 02:42:ac:11:00:02
+    ports:
+      - "1433:1433"
+    restart: "no"
+    env_file:
+      - .env
+    environment:
+      - LOCAL_DB_USER
+      - LOCAL_DB_PASSWORD
+      - LOCAL_DB_HOST
+      - LOCAL_DB_NAME
+    labels:
+      com.microsoft.product: "Microsoft SQL Server"
+      com.microsoft.version: "14.0.3465.1"
+      org.opencontainers.image.ref.name: "ubuntu"
+      org.opencontainers.image.version: "18.04"
+      vendor: "Microsoft"
