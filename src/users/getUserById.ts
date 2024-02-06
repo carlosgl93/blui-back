@@ -12,11 +12,11 @@ export const getUserById = async (req: Request, res: Response) => {
 
   try {
     const userResult = await request.query(`SELECT * FROM Usuario WHERE id = @id`);
-    const prestadorResult = await request.query(`SELECT * FROM Prestador WHERE id = @id`);
-    const isPrestador = prestadorResult.recordset.length > 0;
+    // const prestadorResult = await request.query(`SELECT * FROM Prestador WHERE id = @id`);
+    // const isPrestador = prestadorResult.recordset.length > 0;
     res.json({
       status: "success",
-      data: isPrestador ? prestadorResult.recordset[0] : userResult.recordset[0],
+      data: userResult.recordset[0],
       message: "Fetched user successfully",
       statusCode: 200
     });

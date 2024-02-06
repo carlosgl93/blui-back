@@ -4,6 +4,6 @@ import { getPrestadorInboxMessages, getUsuarioInboxMessages } from "../controlle
 const inboxRouter = express.Router();
 
 inboxRouter.get("/prestador", getPrestadorInboxMessages);
-inboxRouter.post("/usuario", getUsuarioInboxMessages);
+inboxRouter.get("/usuario", getUsuarioInboxMessages);
 
 export default inboxRouter;

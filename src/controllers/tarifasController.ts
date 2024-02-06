@@ -77,3 +77,42 @@ export const postTarifas = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const postFreeMeetGreet = async (req: Request, res: Response) => {
+  const { prestadorId, freeMeetGreet } = req.body;
+  console.log(req.body);
+  console.log(req.params);
+  console.log(req.query);
+
+  const request = getPool().request();
+  request.input("prestadorId", sql.Int, prestadorId);
+  request.input("freeMeetGreet", sql.Bit, freeMeetGreet);
+
+  try {
+    await request.query`
+      UPDATE Prestador
+      SET offers_free_meet_greet = @freeMeetGreet
+      WHERE id = @prestadorId;
+    `;
+
+    return res.status(200).send({
+      status: "success",
+      message: "Free meet and greet updated successfully.",
+      statusCode: 200
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      error(err.message);
+      return res.status(500).send({
+        status: "error",
+        message: "There was an error updating free meet and greet. " + err.message,
+        statusCode: 500
+      });
+    }
+    return res.status(500).send({
+      status: "error",
+      message: "There was an error updating free meet and greet.",
+      statusCode: 500
+    });
+  }
+};

@@ -15,6 +15,7 @@ export const getPrestadorInboxMessages = async (req: Request, res: Response) => 
             SELECT *,
             ROW_NUMBER() OVER(PARTITION BY prestador_id, usuario_id ORDER BY created_at DESC) as rn
             FROM Mensajes
+            WHERE prestador_id = @prestadorId
         ) t
         JOIN Usuario u ON t.usuario_id = u.id
         WHERE rn = 1;

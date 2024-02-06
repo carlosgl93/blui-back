@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 
 import { getPool } from "../db/db";
 import { SECRET, EMAIL_USERNAME, EMAIL_PASSWORD, BASE_URL } from "../utils/config";
+import Mail from "nodemailer/lib/mailer";
 
 export const postMessage = async (req: Request, res: Response) => {
   console.log("posting a new message");
@@ -60,9 +61,14 @@ export const postMessage = async (req: Request, res: Response) => {
             SELECT firstname, email, lastname FROM Usuario WHERE id = ${userId}
         `);
 
-    const { firstname: prestadorName, email } = prestadorQuery.recordset[0];
+    const { firstname: prestadorName, email: prestadorEmail } = prestadorQuery.recordset[0];
+    console.log("prestadorName", prestadorName);
+    console.log("prestadorEmail", prestadorEmail);
 
-    const { firstname: userFirstname, lastname: userLastname } = userQuery.recordset[0];
+    const { firstname: userFirstname, lastname: userLastname, email: userEmail } = userQuery.recordset[0];
+    console.log("userFirstname", userFirstname);
+    console.log("userLastname", userLastname);
+    console.log("userEmail", userEmail);
 
     let transporter = nodemailer.createTransport({
       service: "gmail",
@@ -72,18 +78,35 @@ export const postMessage = async (req: Request, res: Response) => {
       }
     });
 
-    let mailOptions = {
-      from: EMAIL_USERNAME,
-      to: email,
-      subject: `Blui: ${userFirstname} te ha enviado un mensaje`,
-      text: `Hola ${prestadorName}, ${userFirstname} te ha enviado un mensaje: ${message}`,
-      html:
-        `<p>Hola ${prestadorName}:</p>` +
-        `${userFirstname} ${userLastname} te ha enviado un mensaje:` +
-        `<br>` +
-        `<p>${message}</p>` +
-        `<a href="${BASE_URL}/chat?userId=${userId}&prestadorId=${prestadorId}">¡Respondele aquí!</a>`
-    };
+    let mailOptions: Mail.Options;
+
+    if (sentBy === "prestador") {
+      mailOptions = {
+        from: EMAIL_USERNAME,
+        to: userEmail,
+        subject: `Blui: ${prestadorName} te ha enviado un mensaje`,
+        text: `Hola ${userFirstname}, ${prestadorName} te ha enviado un mensaje: ${message}`,
+        html:
+          `<p>Hola ${userFirstname}:</p>` +
+          `${prestadorName} te ha enviado un mensaje:` +
+          `<br>` +
+          `<p>${message}</p>` +
+          `<a href="${BASE_URL}/chat?userId=${userId}&prestadorId=${prestadorId}">¡Respondele aquí!</a>`
+      };
+    } else {
+      mailOptions = {
+        from: EMAIL_USERNAME,
+        to: prestadorEmail,
+        subject: `Blui: ${userFirstname} te ha enviado un mensaje`,
+        text: `Hola ${prestadorName}, ${userFirstname} te ha enviado un mensaje: ${message}`,
+        html:
+          `<p>Hola ${prestadorName}:</p>` +
+          `${userFirstname} ${userLastname} te ha enviado un mensaje:` +
+          `<br>` +
+          `<p>${message}</p>` +
+          `<a href="${BASE_URL}/prestador-chat?userId=${userId}&prestadorId=${prestadorId}">¡Respondele aquí!</a>`
+      };
+    }
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
