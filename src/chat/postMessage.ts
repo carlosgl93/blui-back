@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import sql from "mssql";
 import nodemailer from "nodemailer";
 
@@ -11,32 +11,53 @@ export const postMessage = async (req: Request, res: Response) => {
   console.log("posting a new message");
 
   console.log(req.body);
-  const { userId, prestadorId, message, sentBy } = req.body;
-  console.log("sentBy", sentBy);
+  const { message, sentBy } = req.body;
+
+  const userId = Number(req.body.userId);
+  const prestadorId = Number(req.body.prestadorId);
 
   const secretKey = SECRET;
 
   if (!req.headers.authorization) {
     return res.status(401).send({
       status: "error",
-      message: "You are not authorized to post a message.",
+      message: "Missing auth token.",
       statusCode: 401
     });
   }
 
+  if (req?.headers?.authorization.length < 1) {
+    return res.status(401).send({
+      status: "error",
+      message: "Missing JWT Token.",
+      statusCode: 401
+    });
+  }
   const token = req?.headers?.authorization?.split(" ")[1];
+  console.log(token);
 
   try {
     // Verify the token.
-    const decoded = jwt.verify(token, secretKey as string);
+    const decoded = jwt.verify(token, secretKey as string) as JwtPayload;
 
     console.log("DECODED TOKEN", decoded);
-    const decodedHasId = typeof decoded === "object" && decoded !== null && decoded.id !== undefined;
+    console.log("USER ID", userId);
+    console.log("PRESTADOR ID", prestadorId);
 
-    if (decodedHasId && decoded.id !== userId && decoded.id !== prestadorId) {
+    console.log("decoded.id", decoded?.id);
+
+    if (sentBy === "prestador" && decoded.id !== prestadorId) {
       const errorResponse = {
         status: "error",
-        message: "You are not authorized to post a message.",
+        message: "Prestador ID does not match the token.",
+        statusCode: 401
+      };
+      return res.status(401).send(errorResponse);
+    }
+    if (sentBy === "user" && decoded.id !== userId) {
+      const errorResponse = {
+        status: "error",
+        message: "Customer ID does not match the token.",
         statusCode: 401
       };
       return res.status(401).send(errorResponse);
@@ -134,11 +155,14 @@ export const postMessage = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     if (error instanceof jwt.JsonWebTokenError) {
-      return res.status(401).send({
-        status: "error",
-        message: "You are not authorized to post a message.",
-        statusCode: 401
-      });
+      console.log("jwt error", error);
+      if (error.message === "jwt must be provided") {
+        return res.status(401).send({
+          status: "error",
+          message: "Missing JWT Token.",
+          statusCode: 401
+        });
+      }
     } else if (error instanceof Error) {
       return res.status(500).send({
         status: "error",
