@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import { info } from "./utils/logger";
+// import { info } from "./utils/logger";
 
 const cors = require("cors");
 
@@ -16,12 +16,14 @@ import disponibilidadRouter from "./routes/disponibilidadRoutes";
 import logPathMiddleware from "./middlewares/logPath";
 import tarifasRouter from "./routes/tarifasRoutes";
 import { unknownEndpoint } from "./middlewares/unknownEndpoint";
+import experienceRouter from "./routes/experience";
 
 export const app = express();
 
 dotenv.config();
 app.use(cors());
 app.use(express.json());
+// app.use(info);
 
 connectDb();
 
@@ -35,6 +37,7 @@ app.use("/chat", chatRouter);
 app.use("/inbox", inboxRouter);
 app.use("/disponibilidad", disponibilidadRouter);
 app.use("/tarifas", tarifasRouter);
+app.use("/experience", experienceRouter);
 
 app.use(unknownEndpoint);
 
