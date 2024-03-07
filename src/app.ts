@@ -17,6 +17,7 @@ import logPathMiddleware from "./middlewares/logPath";
 import tarifasRouter from "./routes/tarifasRoutes";
 import { unknownEndpoint } from "./middlewares/unknownEndpoint";
 import experienceRouter from "./routes/experience";
+import cuentaBancariaRouter from "./routes/cuentaBancaria";
 
 export const app = express();
 
@@ -38,6 +39,7 @@ app.use("/inbox", inboxRouter);
 app.use("/disponibilidad", disponibilidadRouter);
 app.use("/tarifas", tarifasRouter);
 app.use("/experience", experienceRouter);
+app.use("/cuentaBancaria", cuentaBancariaRouter);
 
 app.use(unknownEndpoint);
 

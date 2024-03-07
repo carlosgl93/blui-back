@@ -6,8 +6,8 @@ import {
   verifyPrestador,
   createPrestador,
   getPrestadorComunas
-} from "../prestadores";
-import { postPrestadorComunas } from "../prestadores/postPrestadorComunas";
+} from "../services/prestadores";
+import { postPrestadorComunas } from "../services/prestadores/postPrestadorComunas";
 
 export const getAllPrestadores = (req: Request, res: Response) => {
   getPrestadores(req, res);

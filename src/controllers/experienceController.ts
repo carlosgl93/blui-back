@@ -4,7 +4,7 @@ import {
   getAllExperiences as getAll,
   postPrestadorExperience as savePrestadorExperiences,
   getPrestadorExperience as getPrestadorExp
-} from "../experience";
+} from "../services/experience";
 
 export const getAllExperiences = (req: Request, res: Response) => {
   getAll(req, res);

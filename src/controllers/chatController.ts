@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { getMessages as get, postMessage as post } from "../chat";
+import { getMessages as get, postMessage as post } from "../services/chat";
 
 export const getMessages = (req: Request, res: Response) => {
   // Your existing getMessages function

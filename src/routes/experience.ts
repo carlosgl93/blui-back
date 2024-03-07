@@ -1,6 +1,6 @@
 import express from "express";
 import { getAllExperiences, postPrestadorExperience } from "../controllers/experienceController";
-import { getPrestadorExperience } from "../experience";
+import { getPrestadorExperience } from "../services/experience";
 
 const experienceRouter = express.Router();
 
