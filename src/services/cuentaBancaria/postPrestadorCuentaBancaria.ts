@@ -28,14 +28,33 @@ export const postPrestadorCuentaBancaria = async (req: Request, res: Response) =
   request.input("rutTitular", sql.NVarChar, rut);
   request.input("nombreTitular", sql.NVarChar, titular);
 
-  const query = `INSERT INTO CuentaBancaria (prestadorId, banco, tipoCuenta, numeroCuenta, rut, titular) VALUES (@prestadorId, @banco, @tipoCuenta, @numeroCuenta, @rutTitular, @nombreTitular)`;
+  const checkQuery = `SELECT * FROM CuentaBancaria WHERE prestadorId = @prestadorId`;
 
-  try {
-    const result = await request.query(query);
-    console.log(result);
-    res.status(200).send("Cuenta bancaria insertada correctamente");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al intentar insertar cuenta bancaria");
+  const checkResult = await request.query(checkQuery);
+
+  if (checkResult.recordset.length > 0) {
+    // Update existing record
+    const updateQuery = `UPDATE CuentaBancaria SET banco = @banco, tipoCuenta = @tipoCuenta, numeroCuenta = @numeroCuenta, rut = @rutTitular, titular = @nombreTitular WHERE prestadorId = @prestadorId`;
+
+    try {
+      const result = await request.query(updateQuery);
+      console.log(result);
+      res.status(200).send("Cuenta bancaria actualizada correctamente");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al intentar actualizar cuenta bancaria");
+    }
+  } else {
+    // Insert new record
+    const insertQuery = `INSERT INTO CuentaBancaria (prestadorId, banco, tipoCuenta, numeroCuenta, rut, titular) VALUES (@prestadorId, @banco, @tipoCuenta, @numeroCuenta, @rutTitular, @nombreTitular)`;
+
+    try {
+      const result = await request.query(insertQuery);
+      console.log(result);
+      res.status(200).send("Cuenta bancaria insertada correctamente");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al intentar insertar cuenta bancaria");
+    }
   }
 };
