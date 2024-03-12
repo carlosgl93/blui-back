@@ -37,8 +37,6 @@ export const postHistorialLaboral = async (req: Request, res: Response) => {
       throw new Error("Error al insertar historial laboral");
     }
 
-    console.log(historial);
-
     if (historial.id) {
       request.input("id", sql.Int, historial.id);
     }
