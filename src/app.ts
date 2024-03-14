@@ -19,6 +19,7 @@ import { unknownEndpoint } from "./middlewares/unknownEndpoint";
 import experienceRouter from "./routes/experience";
 import cuentaBancariaRouter from "./routes/cuentaBancariaRoutes";
 import historialLaboralRouter from "./routes/historialLaboralRoutes";
+import educacionRouter from "./routes/educacionRoutes";
 
 export const app = express();
 
@@ -42,6 +43,8 @@ app.use("/tarifas", tarifasRouter);
 app.use("/experience", experienceRouter);
 app.use("/cuentaBancaria", cuentaBancariaRouter);
 app.use("/historialLaboral", historialLaboralRouter);
+app.use("/educacion", educacionRouter);
+
 
 app.use(unknownEndpoint);
 
