@@ -20,6 +20,7 @@ import experienceRouter from "./routes/experience";
 import cuentaBancariaRouter from "./routes/cuentaBancariaRoutes";
 import historialLaboralRouter from "./routes/historialLaboralRoutes";
 import educacionRouter from "./routes/educacionRoutes";
+import { errorMiddleware } from "./middlewares/error";
 
 export const app = express();
 
@@ -45,8 +46,8 @@ app.use("/cuentaBancaria", cuentaBancariaRouter);
 app.use("/historialLaboral", historialLaboralRouter);
 app.use("/educacion", educacionRouter);
 
-
 app.use(unknownEndpoint);
+app.use(errorMiddleware);
 
 
 
