@@ -116,3 +116,5 @@ CREATE TABLE Tarifas (
     FOREIGN KEY (prestador_id) REFERENCES Prestador(id)
 );
 
+ALTER TABLE Prestador
+ADD offers_free_meet_greet BIT NOT NULL DEFAULT 0;
